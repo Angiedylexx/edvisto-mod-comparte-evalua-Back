@@ -64,6 +64,7 @@ async function delivery (request, response, next) {
       title: isAssigned.title,
       emailStudent,
       videoURL,
+      qualified: false,
     });
 
     //Almacenamiento de la entrega

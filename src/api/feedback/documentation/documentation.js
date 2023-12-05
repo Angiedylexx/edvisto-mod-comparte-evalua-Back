@@ -51,40 +51,76 @@
 */ 
 
 
+/**
+ * @openapi 
+ *  components:
+ *   securitySchemes:
+ *    bearerAuth:
+ *     type: apiKey
+ *     in: header
+ *     name: Authorization
+ *     scheme: bearer
+ *     bearerFormat: JWT
+ *    Refresh-Token:
+ *     type: apiKey
+ *     in: header
+ *     name: Refresh-Token
+ *     scheme: bearer
+ *     bearerFormat: JWT
+ */
+
+
+//Response
+
+/**
+ * @openapi 
+ *  components:
+ *   responses:
+ *    UauthorizedError:
+ *     description: Acess token is missing or invalid
+ */
+
+
+
 //API POST
 
 /**
  * @openapi
  * /api/delivery/{id}:
  *  post:
- *   summary: Creates the deliverable to a given project assignment
- *   tags: [FeedbackSchema]
- *   parameters:
- *   -  in: path
- *      name: id
- *      schema:
- *       type: string
- *      required: true
- *      description: ID of the Assignment
- *   requestBody:
- *    required: true
- *    content:
- *     application/json:
- *      schema:
- *       type: object
- *       $ref: '#/components/schemas/FeedbackSchema'
- *      example:
- *       emailStudent: some1@example.com 
- *       videoURL: https://www.youtube.com/watch?v=T85b4E-piVE&t=224s
- *   responses:
- *    201:
- *     description: Project delivered
- *    404:
- *     description: Assignment not Found or project not assigned to student
- *    422:
- *     description: Id Not Valid
- *    500:
- *     description: Unknown error
+ *    securitySchemes:
+ *      - bearerAuth: []
+ *      - RefreshToken: []
+ *    summary: Creates the deliverable to a given project assignment
+ *    tags: [FeedbackSchema]
+ *    parameters:
+ *    -  in: path
+ *       name: id
+ *       schema:
+ *        type: string
+ *       required: true
+ *       description: ID of the Assignment
+ *    requestBody:
+ *     required: true
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        $ref: '#/components/schemas/FeedbackSchema'
+ *       example:
+ *        emailStudent: some1@example.com 
+ *        videoURL: https://www.youtube.com/watch?v=T85b4E-piVE&t=224s
+ *    responses:
+ *     201:
+ *      description: Project delivered
+ *     401:
+ *      $ref: '#/components/responses/UauthorizedError'
+ *     404:
+ *      description: Assignment not Found or project not assigned to student
+ *     422:
+ *      description: Id Not Valid
+ *     500:
+ *      description: Unknown error
  */
 
 // API GET
@@ -93,49 +129,54 @@
  * @openapi
  * /api/deliveries:
  *  get:
- *   summary: Return all deliveries and qualified projects
- *   tags: [FeedbackSchema]
- *   parameters:
- *    - in: query
- *      name: assignmentId
- *      description: Query for assignmentId
- *      schema:
- *        type: string
- *    - in: query
- *      name: emailStudent
- *      description: Query for emailStudent
- *      schema:
- *        type: string
- *    - in: query
- *      name: course
- *      description: Query for course
- *      schema:
- *        type: string
- *    - in: query
- *      name: title
- *      description: Query for title
- *      schema:
- *        type: string
- *    - in: query
- *      name: qualified
- *      description: Query for qualified
- *      schema:
- *        type: string
- *   responses:
- *    200:
- *     description: Deliveries found successfully
- *     content:
- *      application/json:
+ *    security:
+ *      - bearerAuth: []
+ *      - Refresh-Token: []
+ *    summary: Return all deliveries and qualified projects
+ *    tags: [FeedbackSchema]
+ *    parameters:
+ *     - in: query
+ *       name: assignmentId
+ *       description: Query for assignmentId
  *       schema:
- *        type: array
- *        items:
- *         $ref: '#/components/schemas/FeedbackSchema'
- *    400:
- *     description: Something went wrong
- *    404:
- *     description: Deliveries Not Found
- *    500:
- *     description: Unknown error 
+ *         type: string
+ *     - in: query
+ *       name: emailStudent
+ *       description: Query for emailStudent
+ *       schema:
+ *         type: string
+ *     - in: query
+ *       name: course
+ *       description: Query for course
+ *       schema:
+ *         type: string
+ *     - in: query
+ *       name: title
+ *       description: Query for title
+ *       schema:
+ *         type: string
+ *     - in: query
+ *       name: qualified
+ *       description: Query for qualified
+ *       schema:
+ *         type: string
+ *    responses:
+ *     200:
+ *      description: Deliveries found successfully
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: array
+ *         items:
+ *          $ref: '#/components/schemas/FeedbackSchema'
+ *     400:
+ *      description: Something went wrong
+ *     401:
+ *      $ref: '#/components/responses/UauthorizedError'
+ *     404:
+ *      description: Deliveries Not Found
+ *     500:
+ *      description: Unknown error 
  */
 
 // API GET
@@ -144,30 +185,34 @@
  * @openapi
  * /api/deliveries/{id}:
  *  get:
- *   summary: Return count of qualified deliverables over the total quantity of a project
- *   tags: [FeedbackSchema]
- *   parameters:
- *    - in: path
- *      name: id
- *      schema:
- *       type: string
- *      required: true
- *      description: ID of the Assignment
- *   responses:
- *    200:
- *     description: Count found successfully
- *     content:
- *      application/json:
+ *    security:
+ *      - bearerAuth: []
+ *    summary: Return count of qualified deliverables over the total quantity of a project
+ *    tags: [FeedbackSchema]
+ *    parameters:
+ *     - in: path
+ *       name: id
  *       schema:
- *        type: array
- *        items:
- *         $ref: '#/components/schemas/FeedbackSchema'
- *    400:
- *     description: Something went wrong
- *    422:
- *     description: Id Not Valid
- *    500:
- *     description: Unknown error 
+ *        type: string
+ *       required: true
+ *       description: ID of the Assignment
+ *    responses:
+ *     200:
+ *      description: Count found successfully
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: array
+ *         items:
+ *          $ref: '#/components/schemas/FeedbackSchema'
+ *     400:
+ *      description: Something went wrong
+ *     401:
+ *      $ref: '#/components/responses/UauthorizedError'
+ *     422:
+ *      description: Id Not Valid
+ *     500:
+ *      description: Unknown error 
  */
 
 // API PATCH

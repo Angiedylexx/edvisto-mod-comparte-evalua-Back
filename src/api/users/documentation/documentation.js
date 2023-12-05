@@ -53,32 +53,60 @@
  *      course: SegundoA
  */
 
+//Authorization
+
+/**
+ * @openapi 
+ *  components:
+ *   securitySchemes:
+ *    bearerAuth:
+ *     type: apiKey
+ *     in: header
+ *     name: Authorization
+ *     scheme: bearer
+ *     bearerFormat: JWT
+ */
+
+//Response
+
+/**
+ * @openapi 
+ *  components:
+ *   responses:
+ *    UauthorizedError:
+ *     description: Acess token is missing or invalid
+ */
+
 //API POST
 
 /**
  * @openapi
  * /api/register:
  *  post:
- *   summary: The following route creates, stores and sends a verification email to the provided email
- *   tags: [UserSchema]
- *   requestBody:
- *    required: true
- *    content:
- *     application/json:
- *      schema:
- *       type: object
- *       $ref: '#/components/schemas/UserSchema'
- *   responses:
- *    201:
- *     description: User Created
- *    400:
- *     description: Bad Request
- *    422:
- *     description: Validation error, wrong date format
- *    409:
- *     description: Email is assigned to another user, The password do not match
- *    500:
- *     description: Unknown error
+ *    security:
+ *      - bearerAuth: []
+ *    summary: The following route creates, stores and sends a verification email to the provided email
+ *    tags: [UserSchema]
+ *    requestBody:
+ *     required: true
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        $ref: '#/components/schemas/UserSchema'
+ *    responses:
+ *     201:
+ *      description: User Created
+ *     400:
+ *      description: Bad Request
+ *     401:
+ *      $ref: '#/components/responses/UauthorizedError'
+ *     422:
+ *      description: Validation error, wrong date format
+ *     409:
+ *      description: Email is assigned to another user, The password do not match
+ *     500:
+ *      description: Unknown error
  */
 
 // API GET
@@ -87,59 +115,61 @@
  * @openapi
  * /api/users:
  *  get:
- *   summary: Return all users
- *   tags: [UserSchema]
- *   parameters:
- *    - in: query
- *      name: name
- *      description: Query for name
- *      schema:
- *        type: string
- *    - in: query
- *      name: lastName
- *      description: Query for lastName
- *      schema:
- *        type: string
- *    - in: query
- *      name: email
- *      description: Query for email
- *      schema:
- *        type: string
- *    - in: query
- *      name: securityQuestion
- *      description: Query for securityQuestion
- *      schema:
- *        type: string
- *    - in: query
- *      name: securityResponse
- *      description: Query for securityResponse
- *      schema:
- *        type: string
- *    - in: query
- *      name: rol
- *      description: Query for rol
- *      schema:
- *        type: string
-  *    - in: query
- *      name: course
- *      description: Query for course
- *      schema:
- *        type: string
- *   responses:
- *    200:
- *     description: All users
- *     content:
- *      application/json:
- *       schema:
- *        type: array
- *        items:
- *         $ref: '#/components/schemas/UserSchema'
- *    400:
- *     description: Something went wrong
- *    404:
- *     description: User Not Found
- *    500:
- *     description: Unknown error 
+ *    summary: Return all users
+ *    tags: [UserSchema]
+ *    parameters:
+ *      - in: query
+ *        name: name
+ *        description: Query for name
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: lastName
+ *        description: Query for lastName
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: email
+ *        description: Query for email
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: securityQuestion
+ *        description: Query for securityQuestion
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: securityResponse
+ *        description: Query for securityResponse
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: rol
+ *        description: Query for rol
+ *        schema:
+ *          type: string
+ *      - in: query
+ *        name: course
+ *        description: Query for course
+ *        schema:
+ *          type: string
+ *    responses:
+ *      200:
+ *        description: All users
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/UserSchema'
+ *      400:
+ *       description: Something went wrong
+ *      401:
+ *       $ref: '#/components/responses/UauthorizedError'
+ *      404:
+ *       description: User Not Found
+ *      500:
+ *       description: Unknown error 
  */
 
 // API DELETE
@@ -217,7 +247,6 @@
 
 //API LOGIN
 
-
 /**
  * @openapi 
  *  components:
@@ -259,4 +288,5 @@
  *     description: Unauthorized Access
  *    500:
  *     description: UnKwnown Error 
+ * 
  */

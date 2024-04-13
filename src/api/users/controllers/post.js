@@ -1,12 +1,13 @@
-import UserEV from "../../../models/user.js";
-import { schemaRegister } from "./validation.js";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import auth from "../../../config/firebase.js";
-import {createUserWithEmailAndPassword, sendEmailVerification} from "firebase/auth";
-import partsDate from "../../utils/date.js"
+import UserEV from "../../../models/user.js";
+import partsDate from "../../utils/date.js";
+import { schemaRegister } from "./validation.js";
+import bcrypt
 
 const mongoDBEmailDuplicate = 11000;
 
-//Registro de usuario en firebase
+//Registro de usuario en firebas    
 async function registerFirebase(request, response) {
   try {
     const { password, email } = request.body;
@@ -57,6 +58,10 @@ export const registerMongoDB = async (request, response, next) => {
       const {day, month, year} = dateInfo;
         isoDate =`${year}-${month}-${day}T00:00:00.000Z`;
     }
+
+    sal = bcrypt.g
+
+    
     
     const userFB = await registerFirebase(request, response);
     

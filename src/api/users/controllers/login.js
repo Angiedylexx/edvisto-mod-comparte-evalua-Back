@@ -44,7 +44,7 @@ const login = async (request, response, next) => {
 
           user.blocked = true;
 
-          //await sendPasswordResetEmail(auth, email); 
+          await sendPasswordResetEmail(auth, email); 
           await user.save();
           return response.status(403).json({ error:"Blocked account. A password reset email has been sent"});
         }
